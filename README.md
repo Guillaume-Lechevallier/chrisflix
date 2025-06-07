@@ -1,6 +1,8 @@
 # ChrisFlix
 
-Simple video browser that serves files from the directory `F:\Films\`.
+Simple video browser that serves files from a directory of your choice.
+Set the `VIDEO_DIR` environment variable to override the default Windows path
+`F:\Films\` used in the original setup.
 
 ## Backend
 
@@ -8,7 +10,7 @@ Run the backend with Flask:
 
 ```bash
 pip install -r backend/requirements.txt
-python backend/server.py
+VIDEO_DIR=/path/to/videos python backend/server.py
 ```
 
 ## Frontend
