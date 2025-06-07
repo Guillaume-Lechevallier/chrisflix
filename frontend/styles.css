@@ -1,11 +1,11 @@
 :root {
-    --accent-color: #1db954;
-    --background-color: #141414;
-    --text-color: #e5e5e5;
+    --accent-color: #0f0;
+    --background-color: #000;
+    --text-color: #0f0;
 }
 
 body {
-    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-family: "Courier New", monospace;
     margin: 0;
     background: var(--background-color);
     color: var(--text-color);
@@ -14,7 +14,7 @@ body {
 header {
     padding: 20px;
     text-align: center;
-    background: #000;
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .search {
@@ -31,24 +31,27 @@ h1 {
 
 #browser {
     padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
 }
 
 #path {
     margin-bottom: 10px;
     font-weight: bold;
+    color: var(--accent-color);
 }
 
 button {
     background: var(--accent-color);
     border: none;
-    color: #fff;
+    color: #000;
     padding: 8px 16px;
     cursor: pointer;
     font-size: 1rem;
 }
 
 button:hover {
-    background: #1ed760;
+    background: #8f8;
 }
 
 
@@ -61,6 +64,9 @@ button:hover {
 .tile {
     width: 150px;
     cursor: pointer;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    padding: 5px;
 }
 
 .tile img {
@@ -72,21 +78,26 @@ button:hover {
 .tile .title {
     text-align: center;
     margin-top: 5px;
+    color: var(--accent-color);
 }
 
 .dir {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .dir:hover {
-    background: #333;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 #player {
     margin: 20px;
     text-align: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 4px;
 }
 
 #comments {
@@ -114,6 +125,10 @@ button:hover {
 
 #comment-form textarea {
     min-height: 60px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #333;
+    color: var(--text-color);
+    padding: 5px;
 }
 
 video {
@@ -121,4 +136,21 @@ video {
     max-width: 640px;
     display: block;
     margin: 0 auto 10px;
+}
+
+input, select {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #333;
+    color: var(--text-color);
+    padding: 4px;
+}
+
+#matrix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: #000;
 }
