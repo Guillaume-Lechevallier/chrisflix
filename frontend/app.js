@@ -1,7 +1,15 @@
 let currentPath = "";
 
+function encodePath(path) {
+    return path.split("/").map(encodeURIComponent).join("/");
+}
+
+function apiListUrl(path) {
+    return path ? `/api/list/${encodePath(path)}` : "/api/list";
+}
+
 function load(path = "") {
-    fetch(`/api/list/${path}`)
+    fetch(apiListUrl(path))
         .then(response => {
             if (!response.ok) {
                 throw new Error("Failed to load directory");
@@ -41,7 +49,8 @@ function goBack() {
 function playVideo(path) {
     const player = document.getElementById('player');
     const video = document.getElementById('video');
-    video.src = `/api/video/${path}`;
+    const encoded = encodePath(path);
+    video.src = `/api/video/${encoded}`;
     player.style.display = 'block';
     video.play();
 }

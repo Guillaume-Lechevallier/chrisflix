@@ -1,12 +1,14 @@
+"""Minimal Flask backend powering the ChrisFlix video browser."""
+
 import os
 import mimetypes
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, abort, request, Response
 
-# Directory containing the video files. Configure via the `VIDEO_DIR`
+# Directory containing the video files. Configure via the ``VIDEO_DIR``
 # environment variable. It defaults to the Windows path used in the
 # initial project so that existing setups keep working.
-VIDEO_DIR = os.environ.get("VIDEO_DIR", "F:\\Films\\")
+VIDEO_DIR = os.environ.get("VIDEO_DIR", r"F:\\Films\\")
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 
@@ -14,6 +16,10 @@ ALLOWED_EXTENSIONS = {"mp4", "mkv", "avi", "mov"}
 
 
 def safe_join(base: str, *paths: str) -> str:
+    """Safely join one or more path components to *base*.
+
+    Raises a 404 error if the resulting path escapes the base directory.
+    """
     base_path = Path(base).resolve()
     new_path = (base_path / Path(*paths)).resolve()
     if not str(new_path).startswith(str(base_path)):
@@ -23,12 +29,14 @@ def safe_join(base: str, *paths: str) -> str:
 
 @app.route("/")
 def index():
+    """Serve the frontend application."""
     return app.send_static_file("index.html")
 
 
 @app.route("/api/list", defaults={"path": ""})
 @app.route("/api/list/<path:path>")
 def list_videos(path: str):
+    """Return directory contents as JSON."""
     target_dir = safe_join(VIDEO_DIR, path)
     if not os.path.isdir(target_dir):
         abort(404)
@@ -43,11 +51,16 @@ def list_videos(path: str):
             ext = entry.rsplit(".", 1)[-1].lower()
             if ext in ALLOWED_EXTENSIONS:
                 files.append(entry)
-    return jsonify({"path": path, "directories": sorted(directories), "files": sorted(files)})
+    return jsonify({
+        "path": path,
+        "directories": sorted(directories),
+        "files": sorted(files),
+    })
 
 
 @app.route("/api/video/<path:path>")
 def get_video(path: str):
+    """Stream a video file, handling HTTP Range requests."""
     full_path = safe_join(VIDEO_DIR, path)
     if not os.path.isfile(full_path):
         abort(404)
