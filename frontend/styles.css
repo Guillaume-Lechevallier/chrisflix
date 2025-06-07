@@ -1,7 +1,74 @@
-body { font-family: Arial, sans-serif; margin: 20px; background: #141414; color: #eee; }
-h1 { color: #e50914; }
-ul { list-style: none; padding: 0; }
-li { padding: 5px; cursor: pointer; }
-li:hover { background: #333; }
-#player { margin-top: 20px; }
-#path { margin-bottom: 10px; }
+:root {
+    --accent-color: #1db954;
+    --background-color: #141414;
+    --text-color: #e5e5e5;
+}
+
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
+header {
+    padding: 20px;
+    text-align: center;
+    background: #000;
+}
+
+h1 {
+    margin: 0;
+    color: var(--accent-color);
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+}
+
+#browser {
+    padding: 20px;
+}
+
+#path {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+button {
+    background: var(--accent-color);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background: #1ed760;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+}
+
+li:hover {
+    background: #333;
+}
+
+#player {
+    margin: 20px;
+    text-align: center;
+}
+
+video {
+    width: 100%;
+    max-width: 640px;
+    display: block;
+    margin: 0 auto 10px;
+}
