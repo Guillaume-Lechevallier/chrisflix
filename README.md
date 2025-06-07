@@ -9,6 +9,11 @@ Most browsers do not natively play Matroska files. When `ffmpeg` is available on
 the system, the server can transcode `.mkv` files to MP4 on the fly so they play
 in the browser.
 
+For transcoding to work you must have the **ffmpeg** executable installed and
+accessible in your `PATH`. On Windows, download a static build from the
+[official website](https://ffmpeg.org/download.html) and add the `bin` directory
+to your environment variables.
+
 ## Backend
 
 Run the backend with Flask:
