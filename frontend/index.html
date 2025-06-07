@@ -10,10 +10,14 @@
     <header>
         <h1>ChrisFlix</h1>
     </header>
+    <div class="search">
+        <input type="text" id="search-input" placeholder="Search movies" />
+        <button onclick="searchVideos()">Search</button>
+    </div>
     <main id="browser">
         <div id="path"></div>
         <button id="back" onclick="goBack()" style="display:none">Back</button>
-        <ul id="items"></ul>
+        <div id="items" class="items-grid"></div>
     </main>
     <div id="player" style="display:none">
         <video id="video" controls width="640">
@@ -21,6 +25,22 @@
             Your browser does not support HTML5 video.
         </video>
         <button id="close" onclick="closePlayer()">Close</button>
+        <div id="comments">
+            <h2>Comments</h2>
+            <ul id="comment-list"></ul>
+            <form id="comment-form" onsubmit="submitComment(event)">
+                <input type="text" id="username" placeholder="Name" required />
+                <select id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <textarea id="comment-text" placeholder="Your comment" required></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
