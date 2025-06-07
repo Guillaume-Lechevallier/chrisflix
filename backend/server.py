@@ -2,6 +2,7 @@
 
 import os
 import mimetypes
+import shutil
 from pathlib import Path
 from flask import (
     Flask,
@@ -108,8 +109,14 @@ def transcode_video(path: str):
     full_path = safe_join(VIDEO_DIR, path)
     if not os.path.isfile(full_path):
         abort(404)
+    ffmpeg_bin = shutil.which("ffmpeg")
+    if not ffmpeg_bin:
+        abort(
+            500,
+            description="FFmpeg executable not found. Install ffmpeg and ensure it is available in your PATH.",
+        )
     command = [
-        "ffmpeg",
+        ffmpeg_bin,
         "-i",
         full_path,
         "-f",
