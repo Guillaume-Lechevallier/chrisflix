@@ -42,10 +42,12 @@ h1 {
     cursor: pointer;
 }
 
-#logo-button img {
-    width: 240px;
+#site-logo {
+    width: 25vw;
+    max-width: 25vw;
     height: auto;
     display: block;
+    margin: 0 auto;
 }
 
 #browser {
