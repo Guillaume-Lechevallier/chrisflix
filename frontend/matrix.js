@@ -13,6 +13,15 @@ window.addEventListener('load', () => {
     const commentDuration = 5000; // display each comment for 5 seconds
     let commentX = 0;
     let commentY = 0;
+    let commentColor = '#ff0';
+
+    function randomColor() {
+        let color;
+        do {
+            color = '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+        } while (color.toLowerCase() === '#00ff00');
+        return color;
+    }
 
     function fetchRandomComment() {
         fetch('/api/random_comment')
@@ -22,8 +31,9 @@ window.addEventListener('load', () => {
                     const name = data.video.split('/').pop();
                     currentComment = `${name}-${data.rating}/5-${data.comment}`;
                     commentExpire = Date.now() + commentDuration;
-                    commentX = (width - currentComment.length * fontSize) / 2;
-                    commentY = height - fontSize * 2;
+                    commentX = Math.random() * (width - currentComment.length * fontSize);
+                    commentY = Math.random() * (height - fontSize);
+                    commentColor = randomColor();
                 }
             })
             .catch(() => {});
@@ -64,7 +74,7 @@ window.addEventListener('load', () => {
             if (Date.now() > commentExpire) {
                 currentComment = null;
             } else {
-                ctx.fillStyle = '#ff0';
+                ctx.fillStyle = commentColor;
                 ctx.fillText(currentComment, commentX, commentY);
             }
         }

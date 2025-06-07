@@ -33,9 +33,17 @@ h1 {
     letter-spacing: 2px;
 }
 
-#logo {
+#logo-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+#logo-button img {
     width: 240px;
     height: auto;
+    display: block;
 }
 
 #browser {
@@ -68,6 +76,11 @@ button:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    justify-content: center;
+}
+
+.items-grid.few-items .tile {
+    width: 200px;
 }
 
 .tile {
@@ -76,6 +89,9 @@ button:hover {
     background: rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .tile img {
@@ -88,6 +104,8 @@ button:hover {
     text-align: center;
     margin-top: 5px;
     color: var(--accent-color);
+    width: 100%;
+    word-break: break-word;
 }
 
 .dir-tile img {
