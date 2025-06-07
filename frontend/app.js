@@ -23,6 +23,12 @@ function load(path = "") {
             document.getElementById("back").style.display = currentPath ? 'block' : 'none';
             const list = document.getElementById("items");
             list.innerHTML = '';
+            const totalItems = data.directories.length + data.files.length;
+            if (totalItems < 10) {
+                list.classList.add('few-items');
+            } else {
+                list.classList.remove('few-items');
+            }
             data.directories.forEach(dir => {
                 const tile = createDirectoryTile(dir);
                 list.appendChild(tile);
@@ -115,6 +121,7 @@ function playVideo(path) {
     video.load();
     player.style.display = 'block';
     video.play();
+    player.scrollIntoView({ behavior: 'smooth' });
     loadComments(path);
 }
 
