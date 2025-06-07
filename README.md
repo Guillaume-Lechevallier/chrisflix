@@ -4,6 +4,8 @@ Simple video browser that serves files from a directory of your choice.
 Set the `VIDEO_DIR` environment variable to override the default Windows path
 `F:\Films\` used in the original setup.
 
+Supported video formats include **MP4**, **MKV**, **AVI**, and **MOV**.
+
 ## Backend
 
 Run the backend with Flask:

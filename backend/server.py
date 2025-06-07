@@ -12,6 +12,10 @@ VIDEO_DIR = os.environ.get("VIDEO_DIR", r"F:\\Films\\")
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 
+# Ensure common video formats have a MIME type even on minimal installs
+mimetypes.add_type("video/x-matroska", ".mkv")
+mimetypes.add_type("video/x-msvideo", ".avi")
+
 ALLOWED_EXTENSIONS = {"mp4", "mkv", "avi", "mov"}
 
 
