@@ -58,8 +58,14 @@ function playVideo(path) {
         'avi': 'video/x-msvideo',
         'mov': 'video/quicktime'
     };
-    source.src = `/api/video/${encoded}`;
-    source.type = mimeMap[ext] || '';
+    let mime = mimeMap[ext] || '';
+    source.type = mime;
+    if (mime && !video.canPlayType(mime) && ext === 'mkv') {
+        source.src = `/api/transcode/${encoded}`;
+        source.type = 'video/mp4';
+    } else {
+        source.src = `/api/video/${encoded}`;
+    }
     video.load();
     player.style.display = 'block';
     video.play();
