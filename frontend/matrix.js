@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
     const drops = new Array(columns).fill(1);
     let currentComment = null;
     let currentUsername = null;
+    let currentEmoji = '';
     let commentExpire = 0;
     const commentDuration = 5000; // display each comment for 5 seconds
     let commentX = 0;
@@ -39,6 +40,7 @@ window.addEventListener('load', () => {
                 if (data && data.comment) {
                     const name = data.video.split('/').pop();
                     currentUsername = data.username || 'Anonymous';
+                    currentEmoji = data.emoji || '';
                     currentComment = `${name}-${data.rating}/5-${data.comment}`;
                     commentExpire = Date.now() + commentDuration;
                     commentX = Math.random() * (width - currentComment.length * fontSize);
@@ -88,7 +90,7 @@ window.addEventListener('load', () => {
             } else {
                 ctx.font = fontSize + 'px monospace';
                 ctx.fillStyle = nameColor;
-                const nameText = currentUsername + ':';
+                const nameText = currentUsername + (currentEmoji ? ' ' + currentEmoji : '') + ':';
                 ctx.fillText(nameText, commentX, commentY);
                 const nameWidth = ctx.measureText(nameText).width;
                 ctx.fillStyle = commentColor;
