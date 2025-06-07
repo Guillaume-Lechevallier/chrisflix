@@ -3,10 +3,10 @@ import mimetypes
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, abort, request, Response
 
-# Directory containing the video files. Previously configurable via the
-# `VIDEO_DIR` environment variable, this path is now fixed to match the
-# requested setup.
-VIDEO_DIR = "F:\\Films\\"
+# Directory containing the video files. Configure via the `VIDEO_DIR`
+# environment variable. It defaults to the Windows path used in the
+# initial project so that existing setups keep working.
+VIDEO_DIR = os.environ.get("VIDEO_DIR", "F:\\Films\\")
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 
@@ -51,16 +51,20 @@ def get_video(path: str):
     full_path = safe_join(VIDEO_DIR, path)
     if not os.path.isfile(full_path):
         abort(404)
-    range_header = request.headers.get('Range')
+    range_header = request.headers.get("Range")
     if not range_header:
         return send_from_directory(VIDEO_DIR, path)
+
     size = os.path.getsize(full_path)
-    byte1, byte2 = 0, None
-    if range_header:
-        match = range_header.strip().lower().split('=')[-1]
-        byte1, byte2 = match.split('-')[0], match.split('-')[1] if '-' in match else ''
-        byte1 = int(byte1) if byte1 else 0
-        byte2 = int(byte2) if byte2 else size - 1
+    byte1, byte2 = 0, size - 1
+    match = range_header.strip().lower()
+    if match.startswith("bytes="):
+        match = match.split("=", 1)[1]
+        start_end = match.split("-", 1)
+        if start_end[0]:
+            byte1 = int(start_end[0])
+        if len(start_end) > 1 and start_end[1]:
+            byte2 = int(start_end[1])
     length = byte2 - byte1 + 1
     with open(full_path, 'rb') as f:
         f.seek(byte1)
