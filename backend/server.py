@@ -14,13 +14,42 @@ from flask import (
     stream_with_context,
 )
 import subprocess
+import sqlite3
+from datetime import datetime
 
 # Directory containing the video files. Configure via the ``VIDEO_DIR``
 # environment variable. It defaults to the Windows path used in the
 # initial project so that existing setups keep working.
 VIDEO_DIR = os.environ.get("VIDEO_DIR", r"F:\\Films\\")
 
+DB_PATH = os.path.join(os.path.dirname(__file__), "comments.db")
+
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
+
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = get_db()
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        video TEXT,
+        username TEXT,
+        comment TEXT,
+        rating INTEGER,
+        timestamp TEXT
+    )"""
+    )
+    conn.commit()
+    conn.close()
+
+
+init_db()
 
 # Ensure common video formats have a MIME type even on minimal installs
 mimetypes.add_type("video/x-matroska", ".mkv")
@@ -72,6 +101,21 @@ def list_videos(path: str):
     })
 
 
+@app.route("/api/search")
+def search_videos():
+    """Search for videos by filename."""
+    query = request.args.get("query", "").lower()
+    results = []
+    for root_dir, _dirs, files in os.walk(VIDEO_DIR):
+        rel_root = os.path.relpath(root_dir, VIDEO_DIR)
+        for name in files:
+            ext = name.rsplit(".", 1)[-1].lower()
+            if ext in ALLOWED_EXTENSIONS and query in name.lower():
+                rel_path = os.path.join(rel_root, name)
+                results.append(rel_path.replace("\\", "/"))
+    return jsonify({"results": results})
+
+
 @app.route("/api/video/<path:path>")
 def get_video(path: str):
     """Stream a video file, handling HTTP Range requests."""
@@ -101,6 +145,55 @@ def get_video(path: str):
     rv.headers.add('Content-Range', f'bytes {byte1}-{byte2}/{size}')
     rv.headers.add('Accept-Ranges', 'bytes')
     return rv
+
+
+@app.route("/api/thumb/<path:path>")
+def get_thumbnail(path: str):
+    """Return a JPEG thumbnail extracted at 1/3 of the video duration."""
+    full_path = safe_join(VIDEO_DIR, path)
+    if not os.path.isfile(full_path):
+        abort(404)
+    ffmpeg_bin = shutil.which("ffmpeg")
+    ffprobe_bin = shutil.which("ffprobe")
+    if not ffmpeg_bin:
+        abort(500, description="FFmpeg executable not found")
+    timestamp = "10"
+    if ffprobe_bin:
+        try:
+            out = subprocess.check_output(
+                [
+                    ffprobe_bin,
+                    "-v",
+                    "error",
+                    "-select_streams",
+                    "v:0",
+                    "-show_entries",
+                    "format=duration",
+                    "-of",
+                    "default=noprint_wrappers=1:nokey=1",
+                    full_path,
+                ]
+            )
+            duration = float(out.strip())
+            timestamp = str(duration / 3)
+        except Exception:
+            pass
+    command = [
+        ffmpeg_bin,
+        "-ss",
+        timestamp,
+        "-i",
+        full_path,
+        "-vframes",
+        "1",
+        "-f",
+        "image2",
+        "-q:v",
+        "2",
+        "pipe:1",
+    ]
+    data = subprocess.check_output(command, stderr=subprocess.DEVNULL)
+    return Response(data, mimetype="image/jpeg")
 
 
 @app.route("/api/transcode/<path:path>")
@@ -149,6 +242,34 @@ def transcode_video(path: str):
     return Response(
         stream_with_context(generate()), mimetype="video/mp4", direct_passthrough=True
     )
+
+
+@app.route("/api/comments/<path:path>", methods=["GET", "POST"])
+def video_comments(path: str):
+    """Retrieve or add comments for a video."""
+    full_path = safe_join(VIDEO_DIR, path)
+    if not os.path.isfile(full_path):
+        abort(404)
+    conn = get_db()
+    if request.method == "POST":
+        data = request.get_json() or {}
+        username = data.get("username", "Anonymous")
+        comment = data.get("comment", "")
+        rating = int(data.get("rating", 0))
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO comments (video, username, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)",
+            (path, username, comment, rating, timestamp),
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"status": "ok"})
+    rows = conn.execute(
+        "SELECT username, comment, rating, timestamp FROM comments WHERE video = ? ORDER BY id DESC",
+        (path,),
+    ).fetchall()
+    conn.close()
+    return jsonify({"comments": [dict(r) for r in rows]})
 
 
 if __name__ == "__main__":

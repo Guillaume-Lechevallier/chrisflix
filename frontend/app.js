@@ -1,4 +1,5 @@
 let currentPath = "";
+let currentVideo = "";
 
 function encodePath(path) {
     return path.split("/").map(encodeURIComponent).join("/");
@@ -23,16 +24,16 @@ function load(path = "") {
             const list = document.getElementById("items");
             list.innerHTML = '';
             data.directories.forEach(dir => {
-                const li = document.createElement('li');
-                li.textContent = dir + '/';
-                li.onclick = () => load(currentPath ? `${currentPath}/${dir}` : dir);
-                list.appendChild(li);
+                const div = document.createElement('div');
+                div.className = 'dir';
+                div.textContent = dir + '/';
+                div.onclick = () => load(currentPath ? `${currentPath}/${dir}` : dir);
+                list.appendChild(div);
             });
             data.files.forEach(file => {
-                const li = document.createElement('li');
-                li.textContent = file;
-                li.onclick = () => playVideo(currentPath ? `${currentPath}/${file}` : file);
-                list.appendChild(li);
+                const fullPath = currentPath ? `${currentPath}/${file}` : file;
+                const tile = createVideoTile(file, fullPath);
+                list.appendChild(tile);
             });
         })
         .catch(err => alert(err.message));
@@ -46,7 +47,40 @@ function goBack() {
     load(newPath);
 }
 
+function createVideoTile(name, fullPath) {
+    const div = document.createElement('div');
+    div.className = 'tile';
+    const img = document.createElement('img');
+    img.src = `/api/thumb/${encodePath(fullPath)}`;
+    img.alt = name;
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = name;
+    div.appendChild(img);
+    div.appendChild(title);
+    div.onclick = () => playVideo(fullPath);
+    return div;
+}
+
+function searchVideos() {
+    const q = document.getElementById('search-input').value.trim();
+    if (!q) return;
+    fetch(`/api/search?query=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('path').textContent = 'Search results';
+            document.getElementById('back').style.display = 'none';
+            const list = document.getElementById('items');
+            list.innerHTML = '';
+            data.results.forEach(p => {
+                const name = p.split('/').pop();
+                list.appendChild(createVideoTile(name, p));
+            });
+        });
+}
+
 function playVideo(path) {
+    currentVideo = path;
     const player = document.getElementById('player');
     const video = document.getElementById('video');
     const source = document.getElementById('video-source');
@@ -69,6 +103,7 @@ function playVideo(path) {
     video.load();
     player.style.display = 'block';
     video.play();
+    loadComments(path);
 }
 
 function closePlayer() {
@@ -76,6 +111,38 @@ function closePlayer() {
     const video = document.getElementById('video');
     video.pause();
     player.style.display = 'none';
+}
+
+function loadComments(path) {
+    fetch(`/api/comments/${encodePath(path)}`)
+        .then(r => r.json())
+        .then(data => {
+            const list = document.getElementById('comment-list');
+            list.innerHTML = '';
+            data.comments.forEach(c => {
+                const li = document.createElement('li');
+                li.textContent = `${c.username} (${c.rating}/5): ${c.comment}`;
+                list.appendChild(li);
+            });
+        });
+}
+
+function submitComment(event) {
+    event.preventDefault();
+    if (!currentVideo) return;
+    const payload = {
+        username: document.getElementById('username').value,
+        comment: document.getElementById('comment-text').value,
+        rating: document.getElementById('rating').value
+    };
+    fetch(`/api/comments/${encodePath(currentVideo)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(() => {
+        document.getElementById('comment-text').value = '';
+        loadComments(currentVideo);
+    });
 }
 
 window.onload = () => load();

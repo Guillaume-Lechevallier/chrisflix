@@ -17,6 +17,11 @@ header {
     background: #000;
 }
 
+.search {
+    text-align: center;
+    margin: 20px;
+}
+
 h1 {
     margin: 0;
     color: var(--accent-color);
@@ -46,24 +51,69 @@ button:hover {
     background: #1ed760;
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+
+.items-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-li {
+.tile {
+    width: 150px;
+    cursor: pointer;
+}
+
+.tile img {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+}
+
+.tile .title {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.dir {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #333;
 }
 
-li:hover {
+.dir:hover {
     background: #333;
 }
 
 #player {
     margin: 20px;
     text-align: center;
+}
+
+#comments {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+#comment-list li {
+    border-bottom: 1px solid #333;
+    padding: 5px 0;
+}
+
+#comment-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#comment-form textarea {
+    min-height: 60px;
 }
 
 video {
