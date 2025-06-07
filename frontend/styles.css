@@ -34,7 +34,7 @@ h1 {
 }
 
 #logo {
-    width: 80px;
+    width: 240px;
     height: auto;
 }
 
@@ -88,6 +88,13 @@ button:hover {
     text-align: center;
     margin-top: 5px;
     color: var(--accent-color);
+}
+
+.dir-tile img {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    display: block;
 }
 
 .dir {
