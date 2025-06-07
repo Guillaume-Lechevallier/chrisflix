@@ -5,6 +5,9 @@ Set the `VIDEO_DIR` environment variable to override the default Windows path
 `F:\Films\` used in the original setup.
 
 Supported video formats include **MP4**, **MKV**, **AVI**, and **MOV**.
+Most browsers do not natively play Matroska files. When `ffmpeg` is available on
+the system, the server can transcode `.mkv` files to MP4 on the fly so they play
+in the browser.
 
 ## Backend
 

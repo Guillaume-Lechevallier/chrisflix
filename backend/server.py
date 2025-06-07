@@ -3,7 +3,16 @@
 import os
 import mimetypes
 from pathlib import Path
-from flask import Flask, jsonify, send_from_directory, abort, request, Response
+from flask import (
+    Flask,
+    jsonify,
+    send_from_directory,
+    abort,
+    request,
+    Response,
+    stream_with_context,
+)
+import subprocess
 
 # Directory containing the video files. Configure via the ``VIDEO_DIR``
 # environment variable. It defaults to the Windows path used in the
@@ -91,6 +100,48 @@ def get_video(path: str):
     rv.headers.add('Content-Range', f'bytes {byte1}-{byte2}/{size}')
     rv.headers.add('Accept-Ranges', 'bytes')
     return rv
+
+
+@app.route("/api/transcode/<path:path>")
+def transcode_video(path: str):
+    """Transcode an unsupported file to MP4 on the fly."""
+    full_path = safe_join(VIDEO_DIR, path)
+    if not os.path.isfile(full_path):
+        abort(404)
+    command = [
+        "ffmpeg",
+        "-i",
+        full_path,
+        "-f",
+        "mp4",
+        "-vcodec",
+        "libx264",
+        "-acodec",
+        "aac",
+        "-movflags",
+        "frag_keyframe+empty_moov",
+        "-loglevel",
+        "error",
+        "-",
+    ]
+    process = subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
+    )
+
+    def generate():
+        try:
+            while True:
+                chunk = process.stdout.read(8192)
+                if not chunk:
+                    break
+                yield chunk
+        finally:
+            process.stdout.close()
+            process.wait()
+
+    return Response(
+        stream_with_context(generate()), mimetype="video/mp4", direct_passthrough=True
+    )
 
 
 if __name__ == "__main__":
