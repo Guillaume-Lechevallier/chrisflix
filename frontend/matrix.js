@@ -9,6 +9,8 @@ window.addEventListener('load', () => {
     let columns = Math.floor(width / fontSize);
     const drops = new Array(columns).fill(1);
     let currentComment = null;
+    let commentExpire = 0;
+    const commentDuration = 5000; // display each comment for 5 seconds
 
     function fetchRandomComment() {
         fetch('/api/random_comment')
@@ -17,13 +19,14 @@ window.addEventListener('load', () => {
                 if (data && data.comment) {
                     const name = data.video.split('/').pop();
                     currentComment = `${name}-${data.rating}/5-${data.comment}`;
+                    commentExpire = Date.now() + commentDuration;
                 }
             })
             .catch(() => {});
     }
 
     fetchRandomComment();
-    setInterval(fetchRandomComment, 10000);
+    setInterval(fetchRandomComment, 5000);
 
     function resize() {
         width = canvas.width = window.innerWidth;
@@ -54,10 +57,14 @@ window.addEventListener('load', () => {
         }
 
         if (currentComment) {
-            ctx.fillStyle = '#ff0';
-            const x = Math.random() * (width - currentComment.length * fontSize);
-            const y = Math.random() * height;
-            ctx.fillText(currentComment, x, y);
+            if (Date.now() > commentExpire) {
+                currentComment = null;
+            } else {
+                ctx.fillStyle = '#ff0';
+                const x = Math.random() * (width - currentComment.length * fontSize);
+                const y = Math.random() * height;
+                ctx.fillText(currentComment, x, y);
+            }
         }
     }
 
