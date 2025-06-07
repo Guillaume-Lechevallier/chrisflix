@@ -169,20 +169,41 @@ function submitComment(event) {
     });
 }
 
+function initEmojiPicker() {
+    const picker = document.getElementById('emoji-picker');
+    const hidden = document.getElementById('emoji');
+    if (!picker) return;
+    picker.addEventListener('click', e => {
+        if (e.target.classList.contains('emoji-option')) {
+            const value = e.target.textContent;
+            hidden.value = value;
+            picker.querySelectorAll('.emoji-option').forEach(btn =>
+                btn.classList.remove('selected')
+            );
+            e.target.classList.add('selected');
+            localStorage.setItem('emoji', value);
+        }
+    });
+    const storedEmoji = localStorage.getItem('emoji');
+    if (storedEmoji) {
+        hidden.value = storedEmoji;
+        const btn = Array.from(picker.querySelectorAll('.emoji-option')).find(
+            b => b.textContent === storedEmoji
+        );
+        if (btn) {
+            btn.classList.add('selected');
+        }
+    }
+}
+
 window.onload = () => {
     load();
     const stored = localStorage.getItem('username');
     if (stored) {
         document.getElementById('username').value = stored;
     }
-    const storedEmoji = localStorage.getItem('emoji');
-    if (storedEmoji) {
-        document.getElementById('emoji').value = storedEmoji;
-    }
+    initEmojiPicker();
     document.getElementById('username').addEventListener('change', e => {
         localStorage.setItem('username', e.target.value);
-    });
-    document.getElementById('emoji').addEventListener('change', e => {
-        localStorage.setItem('emoji', e.target.value);
     });
 };
