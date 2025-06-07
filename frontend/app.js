@@ -140,7 +140,8 @@ function loadComments(path) {
             list.innerHTML = '';
             data.comments.forEach(c => {
                 const li = document.createElement('li');
-                li.textContent = `${c.username} (${c.rating}/5): ${c.comment}`;
+                const emoji = c.emoji || '';
+                li.textContent = `${c.username} ${emoji} (${c.rating}/5): ${c.comment}`;
                 list.appendChild(li);
             });
         });
@@ -152,6 +153,7 @@ function submitComment(event) {
     const usernameInput = document.getElementById('username');
     const payload = {
         username: usernameInput.value,
+        emoji: document.getElementById('emoji').value,
         comment: document.getElementById('comment-text').value,
         rating: document.getElementById('rating').value
     };
@@ -161,6 +163,7 @@ function submitComment(event) {
         body: JSON.stringify(payload)
     }).then(() => {
         localStorage.setItem('username', payload.username);
+        localStorage.setItem('emoji', payload.emoji);
         document.getElementById('comment-text').value = '';
         loadComments(currentVideo);
     });
@@ -172,7 +175,14 @@ window.onload = () => {
     if (stored) {
         document.getElementById('username').value = stored;
     }
+    const storedEmoji = localStorage.getItem('emoji');
+    if (storedEmoji) {
+        document.getElementById('emoji').value = storedEmoji;
+    }
     document.getElementById('username').addEventListener('change', e => {
         localStorage.setItem('username', e.target.value);
+    });
+    document.getElementById('emoji').addEventListener('change', e => {
+        localStorage.setItem('emoji', e.target.value);
     });
 };

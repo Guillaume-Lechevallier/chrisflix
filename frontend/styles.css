@@ -157,6 +157,12 @@ button:hover {
     gap: 5px;
 }
 
+.user-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 #comment-form textarea {
     min-height: 60px;
     background: rgba(0, 0, 0, 0.4);

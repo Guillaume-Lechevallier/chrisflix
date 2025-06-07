@@ -40,11 +40,16 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         video TEXT,
         username TEXT,
+        emoji TEXT,
         comment TEXT,
         rating INTEGER,
         timestamp TEXT
     )"""
     )
+    # Ensure the emoji column exists for databases created with older versions
+    cols = [row[1] for row in conn.execute("PRAGMA table_info(comments)").fetchall()]
+    if "emoji" not in cols:
+        conn.execute("ALTER TABLE comments ADD COLUMN emoji TEXT DEFAULT ''")
     conn.commit()
     conn.close()
 
@@ -254,18 +259,19 @@ def video_comments(path: str):
     if request.method == "POST":
         data = request.get_json() or {}
         username = data.get("username", "Anonymous")
+        emoji = data.get("emoji", "")
         comment = data.get("comment", "")
         rating = int(data.get("rating", 0))
         timestamp = datetime.utcnow().isoformat()
         conn.execute(
-            "INSERT INTO comments (video, username, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?)",
-            (path, username, comment, rating, timestamp),
+            "INSERT INTO comments (video, username, emoji, comment, rating, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+            (path, username, emoji, comment, rating, timestamp),
         )
         conn.commit()
         conn.close()
         return jsonify({"status": "ok"})
     rows = conn.execute(
-        "SELECT username, comment, rating, timestamp FROM comments WHERE video = ? ORDER BY id DESC",
+        "SELECT username, emoji, comment, rating, timestamp FROM comments WHERE video = ? ORDER BY id DESC",
         (path,),
     ).fetchall()
     conn.close()
@@ -277,7 +283,7 @@ def random_comment():
     """Return a random comment from the database including the username."""
     conn = get_db()
     row = conn.execute(
-        "SELECT video, comment, rating, username FROM comments ORDER BY RANDOM() LIMIT 1"
+        "SELECT video, comment, rating, username, emoji FROM comments ORDER BY RANDOM() LIMIT 1"
     ).fetchone()
     conn.close()
     if row:
@@ -287,6 +293,7 @@ def random_comment():
                 "comment": row[1],
                 "rating": row[2],
                 "username": row[3],
+                "emoji": row[4],
             }
         )
     return jsonify({})
