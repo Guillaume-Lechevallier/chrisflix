@@ -8,6 +8,22 @@ window.addEventListener('load', () => {
     const fontSize = 16;
     let columns = Math.floor(width / fontSize);
     const drops = new Array(columns).fill(1);
+    let currentComment = null;
+
+    function fetchRandomComment() {
+        fetch('/api/random_comment')
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.comment) {
+                    const name = data.video.split('/').pop();
+                    currentComment = `${name}-${data.rating}/5-${data.comment}`;
+                }
+            })
+            .catch(() => {});
+    }
+
+    fetchRandomComment();
+    setInterval(fetchRandomComment, 10000);
 
     function resize() {
         width = canvas.width = window.innerWidth;
@@ -35,6 +51,13 @@ window.addEventListener('load', () => {
                 drops[i] = 0;
             }
             drops[i]++;
+        }
+
+        if (currentComment) {
+            ctx.fillStyle = '#ff0';
+            const x = Math.random() * (width - currentComment.length * fontSize);
+            const y = Math.random() * height;
+            ctx.fillText(currentComment, x, y);
         }
     }
 
