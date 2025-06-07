@@ -49,8 +49,18 @@ function goBack() {
 function playVideo(path) {
     const player = document.getElementById('player');
     const video = document.getElementById('video');
+    const source = document.getElementById('video-source');
     const encoded = encodePath(path);
-    video.src = `/api/video/${encoded}`;
+    const ext = path.split('.').pop().toLowerCase();
+    const mimeMap = {
+        'mp4': 'video/mp4',
+        'mkv': 'video/x-matroska',
+        'avi': 'video/x-msvideo',
+        'mov': 'video/quicktime'
+    };
+    source.src = `/api/video/${encoded}`;
+    source.type = mimeMap[ext] || '';
+    video.load();
     player.style.display = 'block';
     video.play();
 }
