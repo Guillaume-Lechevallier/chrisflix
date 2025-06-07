@@ -60,7 +60,7 @@ function playVideo(path) {
     };
     let mime = mimeMap[ext] || '';
     source.type = mime;
-    if (mime && !video.canPlayType(mime) && ext === 'mkv') {
+    if (mime && !video.canPlayType(mime) && (ext === 'mkv' || ext === 'avi')) {
         source.src = `/api/transcode/${encoded}`;
         source.type = 'video/mp4';
     } else {
