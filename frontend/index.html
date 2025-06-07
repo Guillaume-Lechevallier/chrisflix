@@ -12,9 +12,8 @@
     <canvas id="matrix"></canvas>
     <header>
         <button id="logo-button" onclick="load('')">
-            <img src="acceuil-logo.png" alt="ChrisFlix logo">
+            <img id="site-logo" src="Nom Site et Logo.png" alt="Site logo">
         </button>
-        <h1>ChrisFlix</h1>
     </header>
     <div class="search">
         <input type="text" id="search-input" placeholder="Search movies" />
@@ -38,88 +37,7 @@
                 <div class="user-row">
                     <input type="text" id="username" placeholder="Name" required />
                 </div>
-                <div id="emoji-picker" class="emoji-grid">
-                    <button type="button" class="emoji-option">🙂</button>
-                    <button type="button" class="emoji-option">😀</button>
-                    <button type="button" class="emoji-option">😁</button>
-                    <button type="button" class="emoji-option">😂</button>
-                    <button type="button" class="emoji-option">😅</button>
-                    <button type="button" class="emoji-option">😆</button>
-                    <button type="button" class="emoji-option">😉</button>
-                    <button type="button" class="emoji-option">😎</button>
-                    <button type="button" class="emoji-option">😍</button>
-                    <button type="button" class="emoji-option">😘</button>
-                    <button type="button" class="emoji-option">🤗</button>
-                    <button type="button" class="emoji-option">🤔</button>
-                    <button type="button" class="emoji-option">😢</button>
-                    <button type="button" class="emoji-option">😡</button>
-                    <button type="button" class="emoji-option">😱</button>
-                    <button type="button" class="emoji-option">😴</button>
-                    <button type="button" class="emoji-option">🍎</button>
-                    <button type="button" class="emoji-option">🍐</button>
-                    <button type="button" class="emoji-option">🍊</button>
-                    <button type="button" class="emoji-option">🍋</button>
-                    <button type="button" class="emoji-option">🍌</button>
-                    <button type="button" class="emoji-option">🍉</button>
-                    <button type="button" class="emoji-option">🍓</button>
-                    <button type="button" class="emoji-option">🍍</button>
-                    <button type="button" class="emoji-option">🥕</button>
-                    <button type="button" class="emoji-option">🌽</button>
-                    <button type="button" class="emoji-option">🍅</button>
-                    <button type="button" class="emoji-option">🥦</button>
-                    <button type="button" class="emoji-option">🥒</button>
-                    <button type="button" class="emoji-option">🧅</button>
-                    <button type="button" class="emoji-option">🥔</button>
-                    <button type="button" class="emoji-option">🍆</button>
-                    <button type="button" class="emoji-option">🐶</button>
-                    <button type="button" class="emoji-option">🐱</button>
-                    <button type="button" class="emoji-option">🐭</button>
-                    <button type="button" class="emoji-option">🐰</button>
-                    <button type="button" class="emoji-option">🦊</button>
-                    <button type="button" class="emoji-option">🐻</button>
-                    <button type="button" class="emoji-option">🐼</button>
-                    <button type="button" class="emoji-option">🐨</button>
-                    <button type="button" class="emoji-option">🦁</button>
-                    <button type="button" class="emoji-option">🐯</button>
-                    <button type="button" class="emoji-option">🐸</button>
-                    <button type="button" class="emoji-option">🐷</button>
-                    <button type="button" class="emoji-option">🚗</button>
-                    <button type="button" class="emoji-option">🚕</button>
-                    <button type="button" class="emoji-option">🚙</button>
-                    <button type="button" class="emoji-option">🚌</button>
-                    <button type="button" class="emoji-option">🚓</button>
-                    <button type="button" class="emoji-option">🚑</button>
-                    <button type="button" class="emoji-option">🚒</button>
-                    <button type="button" class="emoji-option">🚐</button>
-                    <button type="button" class="emoji-option">🚚</button>
-                    <button type="button" class="emoji-option">🚜</button>
-                    <button type="button" class="emoji-option">❤️</button>
-                    <button type="button" class="emoji-option">💔</button>
-                    <button type="button" class="emoji-option">⭐</button>
-                    <button type="button" class="emoji-option">✨</button>
-                    <button type="button" class="emoji-option">⚡</button>
-                    <button type="button" class="emoji-option">❄️</button>
-                    <button type="button" class="emoji-option">☀️</button>
-                    <button type="button" class="emoji-option">🌙</button>
-                    <button type="button" class="emoji-option">💯</button>
-                    <button type="button" class="emoji-option">✔️</button>
-                    <button type="button" class="emoji-option">🐦</button>
-                    <button type="button" class="emoji-option">🐧</button>
-                    <button type="button" class="emoji-option">🐔</button>
-                    <button type="button" class="emoji-option">🐴</button>
-                    <button type="button" class="emoji-option">🦄</button>
-                    <button type="button" class="emoji-option">🐝</button>
-                    <button type="button" class="emoji-option">🦋</button>
-                    <button type="button" class="emoji-option">🐞</button>
-                    <button type="button" class="emoji-option">🐙</button>
-                    <button type="button" class="emoji-option">🦕</button>
-                    <button type="button" class="emoji-option">🦖</button>
-                    <button type="button" class="emoji-option">🧚</button>
-                    <button type="button" class="emoji-option">🧜‍♂️</button>
-                    <button type="button" class="emoji-option">🧞</button>
-                    <button type="button" class="emoji-option">🔑</button>
-                    <button type="button" class="emoji-option">🎲</button>
-                </div>
+                <div id="emoji-picker" class="emoji-grid"></div>
                 <input type="hidden" id="emoji" value="">
                 <select id="rating">
                     <option value="1">1</option>
@@ -133,6 +51,7 @@
             </form>
         </div>
     </div>
+    <script src="emoji-list.js"></script>
     <script src="app.js"></script>
     <script src="matrix.js"></script>
 </body>

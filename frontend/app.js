@@ -173,6 +173,16 @@ function initEmojiPicker() {
     const picker = document.getElementById('emoji-picker');
     const hidden = document.getElementById('emoji');
     if (!picker) return;
+    if (typeof EMOJI_LIST !== 'undefined') {
+        picker.innerHTML = '';
+        EMOJI_LIST.forEach(e => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'emoji-option';
+            btn.textContent = e;
+            picker.appendChild(btn);
+        });
+    }
     picker.addEventListener('click', e => {
         if (e.target.classList.contains('emoji-option')) {
             const value = e.target.textContent;
