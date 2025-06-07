@@ -3,7 +3,10 @@ import mimetypes
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, abort, request, Response
 
-VIDEO_DIR = os.environ.get("VIDEO_DIR", "videos")
+# Directory containing the video files. Previously configurable via the
+# `VIDEO_DIR` environment variable, this path is now fixed to match the
+# requested setup.
+VIDEO_DIR = "F:\\Films\\"
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 

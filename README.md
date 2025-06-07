@@ -1,6 +1,6 @@
 # ChrisFlix
 
-Simple video browser that serves files from a directory defined by the `VIDEO_DIR` environment variable.
+Simple video browser that serves files from the directory `F:\Films\`.
 
 ## Backend
 
@@ -8,7 +8,7 @@ Run the backend with Flask:
 
 ```bash
 pip install -r backend/requirements.txt
-VIDEO_DIR=/path/to/videos python backend/server.py
+python backend/server.py
 ```
 
 ## Frontend
