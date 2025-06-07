@@ -272,5 +272,18 @@ def video_comments(path: str):
     return jsonify({"comments": [dict(r) for r in rows]})
 
 
+@app.route("/api/random_comment")
+def random_comment():
+    """Return a random comment from the database."""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT video, comment, rating FROM comments ORDER BY RANDOM() LIMIT 1"
+    ).fetchone()
+    conn.close()
+    if row:
+        return jsonify({"video": row[0], "comment": row[1], "rating": row[2]})
+    return jsonify({})
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
