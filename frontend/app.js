@@ -149,8 +149,9 @@ function loadComments(path) {
 function submitComment(event) {
     event.preventDefault();
     if (!currentVideo) return;
+    const usernameInput = document.getElementById('username');
     const payload = {
-        username: document.getElementById('username').value,
+        username: usernameInput.value,
         comment: document.getElementById('comment-text').value,
         rating: document.getElementById('rating').value
     };
@@ -159,9 +160,19 @@ function submitComment(event) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     }).then(() => {
+        localStorage.setItem('username', payload.username);
         document.getElementById('comment-text').value = '';
         loadComments(currentVideo);
     });
 }
 
-window.onload = () => load();
+window.onload = () => {
+    load();
+    const stored = localStorage.getItem('username');
+    if (stored) {
+        document.getElementById('username').value = stored;
+    }
+    document.getElementById('username').addEventListener('change', e => {
+        localStorage.setItem('username', e.target.value);
+    });
+};

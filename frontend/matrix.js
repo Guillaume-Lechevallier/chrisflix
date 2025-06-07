@@ -9,11 +9,20 @@ window.addEventListener('load', () => {
     let columns = Math.floor(width / fontSize);
     const drops = new Array(columns).fill(1);
     let currentComment = null;
+    let currentUsername = null;
     let commentExpire = 0;
     const commentDuration = 5000; // display each comment for 5 seconds
     let commentX = 0;
     let commentY = 0;
     let commentColor = '#ff0';
+    let nameColor = '#00f';
+
+    function oppositeColor(hex) {
+        const r = 255 - parseInt(hex.substr(1, 2), 16);
+        const g = 255 - parseInt(hex.substr(3, 2), 16);
+        const b = 255 - parseInt(hex.substr(5, 2), 16);
+        return '#' + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
+    }
 
     function randomColor() {
         let color;
@@ -29,11 +38,13 @@ window.addEventListener('load', () => {
             .then(data => {
                 if (data && data.comment) {
                     const name = data.video.split('/').pop();
+                    currentUsername = data.username || 'Anonymous';
                     currentComment = `${name}-${data.rating}/5-${data.comment}`;
                     commentExpire = Date.now() + commentDuration;
                     commentX = Math.random() * (width - currentComment.length * fontSize);
                     commentY = Math.random() * (height - fontSize);
                     commentColor = randomColor();
+                    nameColor = oppositeColor(commentColor);
                 }
             })
             .catch(() => {});
@@ -73,9 +84,15 @@ window.addEventListener('load', () => {
         if (currentComment) {
             if (Date.now() > commentExpire) {
                 currentComment = null;
+                currentUsername = null;
             } else {
+                ctx.font = fontSize + 'px monospace';
+                ctx.fillStyle = nameColor;
+                const nameText = currentUsername + ':';
+                ctx.fillText(nameText, commentX, commentY);
+                const nameWidth = ctx.measureText(nameText).width;
                 ctx.fillStyle = commentColor;
-                ctx.fillText(currentComment, commentX, commentY);
+                ctx.fillText(currentComment, commentX + nameWidth + fontSize * 0.25, commentY);
             }
         }
     }
