@@ -11,6 +11,8 @@ window.addEventListener('load', () => {
     let currentComment = null;
     let commentExpire = 0;
     const commentDuration = 5000; // display each comment for 5 seconds
+    let commentX = 0;
+    let commentY = 0;
 
     function fetchRandomComment() {
         fetch('/api/random_comment')
@@ -20,6 +22,8 @@ window.addEventListener('load', () => {
                     const name = data.video.split('/').pop();
                     currentComment = `${name}-${data.rating}/5-${data.comment}`;
                     commentExpire = Date.now() + commentDuration;
+                    commentX = (width - currentComment.length * fontSize) / 2;
+                    commentY = height - fontSize * 2;
                 }
             })
             .catch(() => {});
@@ -61,9 +65,7 @@ window.addEventListener('load', () => {
                 currentComment = null;
             } else {
                 ctx.fillStyle = '#ff0';
-                const x = Math.random() * (width - currentComment.length * fontSize);
-                const y = Math.random() * height;
-                ctx.fillText(currentComment, x, y);
+                ctx.fillText(currentComment, commentX, commentY);
             }
         }
     }

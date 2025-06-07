@@ -24,11 +24,8 @@ function load(path = "") {
             const list = document.getElementById("items");
             list.innerHTML = '';
             data.directories.forEach(dir => {
-                const div = document.createElement('div');
-                div.className = 'dir';
-                div.textContent = dir + '/';
-                div.onclick = () => load(currentPath ? `${currentPath}/${dir}` : dir);
-                list.appendChild(div);
+                const tile = createDirectoryTile(dir);
+                list.appendChild(tile);
             });
             data.files.forEach(file => {
                 const fullPath = currentPath ? `${currentPath}/${file}` : file;
@@ -59,6 +56,21 @@ function createVideoTile(name, fullPath) {
     div.appendChild(img);
     div.appendChild(title);
     div.onclick = () => playVideo(fullPath);
+    return div;
+}
+
+function createDirectoryTile(name) {
+    const div = document.createElement('div');
+    div.className = 'tile dir-tile';
+    const img = document.createElement('img');
+    img.src = 'Dossier Vert.png';
+    img.alt = name;
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = name + '/';
+    div.appendChild(img);
+    div.appendChild(title);
+    div.onclick = () => load(currentPath ? `${currentPath}/${name}` : name);
     return div;
 }
 
