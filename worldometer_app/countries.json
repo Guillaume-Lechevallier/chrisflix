@@ -1,0 +1,6 @@
+{
+  "france": {"name": "France", "continent": "Europe"},
+  "germany": {"name": "Germany", "continent": "Europe"},
+  "japan": {"name": "Japan", "continent": "Asia"},
+  "united-states": {"name": "United States", "continent": "North America"}
+}
