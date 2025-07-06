@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Population Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-pafGAhUTLs1HW8w6TCwcAukzVGP6L/xALoU8Xm0f0z0=" crossorigin=""/>
+</head>
+<body>
+    <button id="toggle-theme">Dark mode</button>
+    <div id="map" style="height: 400px;"></div>
+    <div id="country-data"></div>
+    <div id="comparator">
+        <select id="country-select" multiple>
+            {% for slug, info in countries.items() %}
+            <option value="{{ slug }}">{{ info.name }}</option>
+            {% endfor %}
+        </select>
+        <button id="compare-btn">Compare</button>
+        <div id="tables"></div>
+        <canvas id="chart" width="400" height="200"></canvas>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1jYK0hNiS6PRN3qkFITP9F5CJbtQNp+Y9LBk0LEk=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha256-3l+oi21RskXw7ZP6bGOIbX5CTOeJdeTz+WZ7c4ILrKg=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/world.geo.json') }}" type="application/json" id="geojson-data"></script>
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+</body>
+</html>

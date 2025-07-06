@@ -28,3 +28,16 @@ VIDEO_DIR=/path/to/videos python backend/server.py
 The frontend is a very small JavaScript application served statically by Flask. It lists directories and files and plays videos in the browser.
 
 Because the environment does not allow network access, a full Angular setup is not provided.
+
+## World Population Dashboard
+
+This project also includes a small Flask dashboard that scrapes live demographic data from [Worldometer](https://www.worldometers.info/).
+
+### Running
+
+```bash
+pip install -r requirements.txt
+python -m worldometer_app.app
+```
+
+Select one or more countries on the page to display their current population statistics. A world map lets you click any country to fetch its data in real time.
