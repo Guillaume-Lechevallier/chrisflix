@@ -44,6 +44,7 @@ python -m worldometer_app.app
 ```
 
 On Windows you can use `launch_dashboard.bat` to set everything up and start the
-dashboard automatically.
+dashboard automatically. The script launches the server in a new window and then
+opens the dashboard in Firefox at `http://localhost:5000/`.
 
 Select one or more countries on the page to display their current population statistics. A world map lets you click any country to fetch its data in real time.
