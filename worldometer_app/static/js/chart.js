@@ -27,7 +27,7 @@ compareBtn.addEventListener('click', async () => {
         type: 'bar',
         data: {
             labels: ['Population'],
-            datasets
+            datasets: datasets
         }
     });
 });

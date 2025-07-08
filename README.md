@@ -21,6 +21,9 @@ Run the backend with Flask:
 ```bash
 pip install -r backend/requirements.txt
 VIDEO_DIR=/path/to/videos python backend/server.py
+
+On Windows you can simply double-click `launch_backend.bat` which sets up a
+virtual environment, installs dependencies and starts the server automatically.
 ```
 
 ## Frontend
@@ -39,5 +42,8 @@ This project also includes a small Flask dashboard that scrapes live demographic
 pip install -r requirements.txt
 python -m worldometer_app.app
 ```
+
+On Windows you can use `launch_dashboard.bat` to set everything up and start the
+dashboard automatically.
 
 Select one or more countries on the page to display their current population statistics. A world map lets you click any country to fetch its data in real time.
